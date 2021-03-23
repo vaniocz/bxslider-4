@@ -1107,7 +1107,7 @@
         return;
       }
 
-      if (e.originalEvent.target.href === undefined) {
+      if (e.originalEvent.target.closest('a') === null) {
         e.preventDefault();
       }
 
@@ -1275,15 +1275,6 @@
 
       if (slider.viewport.get(0).releasePointerCapture) {
         slider.viewport.get(0).releasePointerCapture(slider.pointerId);
-      }
-      // if slider had swipe with left mouse, touch contact and pen contact
-      if (slider.hasMove === false && navigator.userAgent.search("Firefox") < 0 && (slider.originalClickButton === 0 || slider.originalEventType === 'touchstart')) {
-        // trigger click event (fix for Firefox59 and PointerEvent standard compatibility)
-        $(slider.originalClickTarget).trigger({
-          type: 'click',
-          button: slider.originalClickButton,
-          buttons: slider.originalClickButtons
-        });
       }
     };
 
