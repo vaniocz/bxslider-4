@@ -1113,22 +1113,6 @@
         return;
       }
 
-      if (e.originalEvent.target.closest('a') === null) {
-        // if scrolling on y axis, do not prevent default
-        xMovement = Math.abs(touchPoints[0].pageX - slider.touch.start.x),
-        yMovement = Math.abs(touchPoints[0].pageY - slider.touch.start.y),
-        value = 0,
-        change = 0;
-
-        // x axis swipe
-        if ((xMovement * 3) > yMovement && slider.settings.preventDefaultSwipeX) {
-          e.preventDefault();
-        // y axis swipe
-        } else if ((yMovement * 3) > xMovement && slider.settings.preventDefaultSwipeY) {
-          e.preventDefault();
-        }
-      }
-
       //disable slider controls while user is interacting with slides to avoid slider freeze that happens on touch devices when a slide swipe happens immediately after interacting with slider controls
       slider.controls.el.addClass('disabled');
 
