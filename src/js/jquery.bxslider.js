@@ -1,5 +1,5 @@
 /**
- * bxSlider v4.2.1d
+ * bxSlider v4.2.17
  * Copyright 2013-2017 Steven Wanderski
  * Written while drinking Belgian ales and listening to jazz
  * Licensed under MIT (http://opensource.org/licenses/MIT)
@@ -257,11 +257,11 @@
       // if video is true, set up the fitVids plugin
       if (slider.settings.video) { el.fitVids(); }
 	  //preloadImages
-	  if (slider.settings.preloadImages === 'none') { 
-		  preloadSelector = null; 
+	  if (slider.settings.preloadImages === 'none') {
+		  preloadSelector = null;
 	  }
-      else if (slider.settings.preloadImages === 'all' || slider.settings.ticker) { 
-		  preloadSelector = slider.children; 
+      else if (slider.settings.preloadImages === 'all' || slider.settings.ticker) {
+		  preloadSelector = slider.children;
 	  }
       // only check for control addition if not in "ticker" mode
       if (!slider.settings.ticker) {
@@ -1101,6 +1101,12 @@
      *  - DOM event object
      */
     var onTouchStart = function(e) {
+      // if the target is a link allow it to click through and
+      // follow the URL
+      if ($(e.target).is('a')) {
+        return;
+      }
+
       // watch only for left mouse, touch contact and pen contact
       // touchstart event object doesn`t have button property
       if (e.type !== 'touchstart' && e.button !== 0) {
@@ -1108,7 +1114,19 @@
       }
 
       if (e.originalEvent.target.closest('a') === null) {
-        e.preventDefault();
+        // if scrolling on y axis, do not prevent default
+        xMovement = Math.abs(touchPoints[0].pageX - slider.touch.start.x),
+        yMovement = Math.abs(touchPoints[0].pageY - slider.touch.start.y),
+        value = 0,
+        change = 0;
+
+        // x axis swipe
+        if ((xMovement * 3) > yMovement && slider.settings.preventDefaultSwipeX) {
+          e.preventDefault();
+        // y axis swipe
+        } else if ((yMovement * 3) > xMovement && slider.settings.preventDefaultSwipeY) {
+          e.preventDefault();
+        }
       }
 
       //disable slider controls while user is interacting with slides to avoid slider freeze that happens on touch devices when a slide swipe happens immediately after interacting with slider controls
@@ -1121,11 +1139,11 @@
         slider.touch.originalPos = el.position();
         var orig = e.originalEvent,
         touchPoints = (typeof orig.changedTouches !== 'undefined') ? orig.changedTouches : [orig];
-		var chromePointerEvents = typeof PointerEvent === 'function'; 
-		if (chromePointerEvents) { 
-			if (orig.pointerId === undefined) { 
+		var chromePointerEvents = typeof PointerEvent === 'function';
+		if (chromePointerEvents) {
+			if (orig.pointerId === undefined) {
 				return;
-			} 
+			}
 		}
         // record the starting touch x, y coordinates
         slider.touch.start.x = touchPoints[0].pageX;
